@@ -10,38 +10,35 @@ type ListNode struct {
 	Next *ListNode
 }
 
-func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-	var numsL1 []int
-	numsList1 := appendNums(l1, numsL1)
-	var strNum1 string
-	for i := len(numsList1) - 1; i >= 0; i-- {
-		strNum1 += strconv.Itoa(numsList1[i])
-	}
-
-	var numsL2 []int
-	numsList2 := appendNums(l2, numsL2)
-	var strNum2 string
-	for i := len(numsList2) - 1; i >= 0; i-- {
-		strNum2 += strconv.Itoa(numsList2[i])
-	}
+func AddTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	strNum1 := convertListNodeToStrNum(l1)
+	strNum2 := convertListNodeToStrNum(l2)
 
 	sum := toBigInt(strNum1).Add(toBigInt(strNum1), toBigInt(strNum2))
 	sumStr := sum.String()
 
 	newListNode := &ListNode{}
-	cnt := len(sumStr)
-
-	getRes(newListNode, sumStr, cnt-1)
+	setReversedListNode(newListNode, sumStr, len(sumStr)-1)
 	return newListNode
 }
 
-func getRes(l *ListNode, sumStr string, index int) *ListNode {
+func convertListNodeToStrNum(l *ListNode) string {
+	var nums []int
+	numsList := appendNums(l, nums)
+	var strNum string
+	for i := len(numsList) - 1; i >= 0; i-- {
+		strNum += strconv.Itoa(numsList[i])
+	}
+	return strNum
+}
+
+func setReversedListNode(l *ListNode, sumStr string, index int) *ListNode {
 	l.Val = toInt(string(sumStr[index]))
 	if index == 0 {
 		return l
 	}
 	l.Next = &ListNode{}
-	return getRes(l.Next, sumStr, index-1)
+	return setReversedListNode(l.Next, sumStr, index-1)
 }
 
 func appendNums(l *ListNode, res []int) []int {
